@@ -214,7 +214,7 @@ back from Langfuse Cloud.
 - **Free Spaces sleep after 48 hours idle.** The first visit after that pays the ~41 s cold
   start; the UI shows "Not ready" until the logs print `[4/4]`. The vector index is
   unaffected (it lives in Qdrant Cloud); the graph is rebuilt.
-- **Required secrets** (Settings → Variables and secrets): `OPENROUTER_API_KEY`,
+- **Required secrets** (Settings → Variables and secrets): `GEMINI_API_KEY` (or `OPENAI_API_KEY`),
   `QDRANT_URL`, `QDRANT_API_KEY`; optional `LANGFUSE_*` and `TAVILY_API_KEY`. `start.sh`
   refuses to boot without the first three and says which is missing.
 - **Each answer costs real tokens** on the owner's OpenRouter account.

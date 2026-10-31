@@ -40,17 +40,16 @@ class Settings(BaseSettings):
   run a command from.
 - `extra="ignore"` — unknown variables in `.env` are ignored rather than rejected, so a
   leftover from another project does not break startup.
-- `case_sensitive=False` — `OPENROUTER_API_KEY` in the environment maps to the field
-  `openrouter_api_key`.
+- `case_sensitive=False` — environment variable names are matched without regard to case.
 
 Each field has a typed default:
 
 ```python
-    # --- OpenRouter / LLM ---
-    openrouter_api_key: str = ""
-    openrouter_base_url: str = "https://openrouter.ai/api/v1"
-    llm_fast_model: str = "openai/gpt-4o-mini"
-    llm_smart_model: str = "openai/gpt-4o"
+    # --- Gemini / LLM ---
+    llm_api_key: str = ""  # GEMINI_API_KEY or OPENAI_API_KEY
+    llm_base_url: str = "https://generativelanguage.googleapis.com/v1beta/openai/"
+    llm_fast_model: str = "gemini-3.8-flash"
+    llm_smart_model: str = "gemini-pro-latest"
 ```
 
 - Two model names, not one. Chapter 11 explains *tiering*: the fast model handles the

@@ -33,9 +33,9 @@ providers:
 
 defaultTest:
   options:
-    # Judge for every llm-rubric. gpt-4o-mini via OpenRouter for cost control;
+    # Judge for every llm-rubric. Gemini Flash for cost control;
     # the same judge RAGAS uses, so the two reports are graded by one model.
-    provider: openrouter:openai/gpt-4o-mini
+    provider: openai:gemini-3.8-flash
   assert:
     # Contract-level invariant, applied to all 37 cases: the envelope is
     # well-formed and the answer is non-trivial.

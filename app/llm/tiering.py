@@ -60,7 +60,7 @@ def tier_for(task: Task | str) -> Tier:
 
 
 def pick_model(task: Task | str, settings: Settings | None = None) -> str:
-    """Return the OpenRouter model id for this task."""
+    """Return the configured Gemini model id for this task."""
     s = settings or get_settings()
     return s.llm_smart_model if tier_for(task) is Tier.SMART else s.llm_fast_model
 

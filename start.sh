@@ -45,7 +45,10 @@ log "boot as uid=$(id -u) gid=$(id -g)  NEO4J_URI=${NEO4J_URI}  TORCH_DEVICE=${T
 
 # Refuse to start without the cloud credentials the app cannot run without.
 # (Tavily is optional: the web-search tool degrades to 'unavailable'.)
-for v in OPENROUTER_API_KEY QDRANT_URL QDRANT_API_KEY; do
+if [ -z "${GEMINI_API_KEY:-${OPENAI_API_KEY:-}}" ]; then
+  die "GEMINI_API_KEY (or OPENAI_API_KEY) is not set. Add it under Settings -> Variables and secrets."
+fi
+for v in QDRANT_URL QDRANT_API_KEY; do
   [ -n "${!v:-}" ] || die "$v is not set. On Hugging Face add it under Settings -> Variables and secrets."
 done
 

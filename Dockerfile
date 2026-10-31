@@ -6,7 +6,7 @@
 #   Neo4j Community 5 (embedded, loopback only)  ->  graph rebuild from data/raw
 #   ->  FastAPI on 127.0.0.1:8000                  ->  Streamlit on 0.0.0.0:7860
 #
-# Qdrant, Langfuse, OpenRouter and Tavily stay in the cloud and are reached with
+# Qdrant, Langfuse, Gemini and Tavily stay in the cloud and are reached with
 # credentials supplied at RUNTIME (HF Space secrets / --env-file). Nothing
 # secret is baked in: .env is excluded by .dockerignore and the build asserts it.
 # =============================================================================

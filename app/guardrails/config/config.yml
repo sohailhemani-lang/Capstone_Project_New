@@ -14,7 +14,7 @@
 models:
   - type: main
     engine: openai
-    model: openai/gpt-4o-mini
+    model: gemini-3.8-flash
     parameters:
       temperature: 0.0
 

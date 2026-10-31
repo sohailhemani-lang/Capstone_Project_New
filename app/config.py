@@ -9,7 +9,7 @@ from __future__ import annotations
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import Field
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -21,13 +21,21 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         extra="ignore",
         case_sensitive=False,
+        populate_by_name=True,
     )
 
-    # --- OpenRouter / LLM ---
-    openrouter_api_key: str = ""
-    openrouter_base_url: str = "https://openrouter.ai/api/v1"
-    llm_fast_model: str = "openai/gpt-4o-mini"
-    llm_smart_model: str = "openai/gpt-4o"
+    # Gemini's OpenAI-compatible endpoint lets both LangChain and NeMo share
+    # one credential and base URL. OPENAI_* remain accepted for compatibility.
+    llm_api_key: str = Field(
+        default="",
+        validation_alias=AliasChoices("GEMINI_API_KEY", "OPENAI_API_KEY"),
+    )
+    llm_base_url: str = Field(
+        default="https://generativelanguage.googleapis.com/v1beta/openai/",
+        validation_alias=AliasChoices("GEMINI_BASE_URL", "OPENAI_BASE_URL"),
+    )
+    llm_fast_model: str = "gemini-3.8-flash"
+    llm_smart_model: str = "gemini-pro-latest"
 
     # --- Qdrant ---
     qdrant_url: str = ""

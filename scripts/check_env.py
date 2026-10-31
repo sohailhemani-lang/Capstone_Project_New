@@ -56,69 +56,72 @@ def need(*keys: str) -> tuple[bool, str]:
 
 
 # --------------------------------------------------------------------------
-# 1. OpenRouter
+# 1. Gemini
 # --------------------------------------------------------------------------
-def check_openrouter() -> Result:
-    fix = "https://openrouter.ai -> Keys -> Create Key, then set OPENROUTER_API_KEY in .env"
-    ok, why = need("OPENROUTER_API_KEY")
-    if not ok:
-        return Result("OpenRouter", False, why, fix)
+def check_gemini() -> Result:
+    fix = (
+        "Create a Gemini API key at https://aistudio.google.com/apikey and set "
+        "GEMINI_API_KEY (or OPENAI_API_KEY) in .env"
+    )
+    key = os.getenv("GEMINI_API_KEY") or os.getenv("OPENAI_API_KEY", "")
+    if not key.strip():
+        return Result("Gemini", False, "missing: GEMINI_API_KEY or OPENAI_API_KEY", fix)
 
-    key = os.environ["OPENROUTER_API_KEY"]
-    base = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
-    fast = os.getenv("LLM_FAST_MODEL", "openai/gpt-4o-mini")
-    smart = os.getenv("LLM_SMART_MODEL", "openai/gpt-4o")
+    base = (
+        os.getenv("GEMINI_BASE_URL")
+        or os.getenv(
+            "OPENAI_BASE_URL",
+            "https://generativelanguage.googleapis.com/v1beta/openai/",
+        )
+    )
+    fast = os.getenv("LLM_FAST_MODEL", "gemini-3.8-flash")
+    smart = os.getenv("LLM_SMART_MODEL", "gemini-pro-latest")
     notes: list[str] = []
 
     try:
         with httpx.Client(timeout=TIMEOUT) as c:
-            # Check an AUTHENTICATED endpoint first. /models is public and
-            # returns 200 for a revoked key or a deleted account, which made a
-            # dead credential look healthy here once already.
-            r = c.get(f"{base}/key", headers={"Authorization": f"Bearer {key}"})
-            if r.status_code == 401:
+            catalog = c.get(
+                "https://generativelanguage.googleapis.com/v1beta/models",
+                headers={"x-goog-api-key": key},
+            )
+            if catalog.status_code in (400, 401, 403):
                 return Result(
-                    "OpenRouter", False,
-                    f"401 on /key - {r.json().get('error', {}).get('message', 'rejected')} "
-                    "(revoked key, or a deleted/suspended account)", fix)
-            r.raise_for_status()
+                    "Gemini", False,
+                    f"{catalog.status_code} from Gemini model catalog; check the key and API access",
+                    fix,
+                )
+            catalog.raise_for_status()
+            available = {
+                item["name"].rsplit("/", 1)[-1]
+                for item in catalog.json().get("models", [])
+            }
 
-            r = c.get(f"{base}/models", headers={"Authorization": f"Bearer {key}"})
-            r.raise_for_status()
-            available = {m["id"] for m in r.json().get("data", [])}
+            for model in (fast, smart):
+                if model not in available:
+                    return Result("Gemini", False, f"model not available: {model}", fix)
 
-            for m in (fast, smart):
-                if m not in available:
-                    return Result(
-                        "OpenRouter", False, f"model not available: {m}", fix
-                    )
-
-            # Live completion on the cheap model: proves the key can actually
-            # spend, not just read the catalogue. A valid key with no credit
-            # passes /models but fails here - better to learn that now.
-            r = c.post(
-                f"{base}/chat/completions",
-                headers={"Authorization": f"Bearer {key}"},
+            headers = {"Authorization": "Bearer " + key}
+            endpoint = f"{base.rstrip('/')}/chat/completions"
+            completion = c.post(
+                endpoint,
+                headers=headers,
                 json={
                     "model": fast,
                     "messages": [{"role": "user", "content": "Reply with: ok"}],
-                    "max_tokens": 5,
+                    "max_tokens": 8,
                 },
             )
-            if r.status_code in (402, 403):
+            if completion.status_code == 429:
                 return Result(
-                    "OpenRouter", False,
-                    f"{r.status_code} - key valid but no credit available",
-                    "Add credit at https://openrouter.ai/credits",
+                    "Gemini", False,
+                    "429 from Gemini generation; check quota and billing in Google AI Studio",
+                    "Check https://aistudio.google.com and the Gemini API rate limits",
                 )
-            r.raise_for_status()
+            completion.raise_for_status()
 
-            # NeMo Guardrails compatibility probe (see plan, Phase 5 risk).
-            # NeMo drives OpenRouter through its OpenAI-compatible engine and
-            # needs non-streaming tool-calling to work through the proxy.
-            r = c.post(
-                f"{base}/chat/completions",
-                headers={"Authorization": f"Bearer {key}"},
+            tool_probe = c.post(
+                endpoint,
+                headers=headers,
                 json={
                     "model": fast,
                     "messages": [{"role": "user", "content": "Weather in Paris?"}],
@@ -137,23 +140,23 @@ def check_openrouter() -> Result:
                     }],
                 },
             )
-            if r.status_code != 200:
+            if tool_probe.status_code != 200:
                 notes.append(
-                    f"{Y}tool-calling probe failed ({r.status_code}) - NeMo may need "
-                    f"a direct OpenAI key at Phase 5{RST}"
+                    f"{Y}tool-calling probe failed ({tool_probe.status_code}) - "
+                    f"verify NeMo compatibility before deploying{RST}"
                 )
-            elif not r.json()["choices"][0]["message"].get("tool_calls"):
+            elif not tool_probe.json()["choices"][0]["message"].get("tool_calls"):
                 notes.append(
-                    f"{Y}tool-calling returned no tool_calls - verify before Phase 5{RST}"
+                    f"{Y}tool-calling returned no tool_calls - verify before deployment{RST}"
                 )
             else:
                 notes.append(f"{DIM}tool-calling OK (NeMo-compatible){RST}")
 
     except httpx.HTTPError as e:
-        return Result("OpenRouter", False, f"{type(e).__name__}: {e}", fix)
+        return Result("Gemini", False, f"{type(e).__name__}: {e}", fix)
 
     return Result(
-        "OpenRouter", True, f"{mask(key)} - {fast} + {smart} reachable", notes=notes
+        "Gemini", True, f"{mask(key)} - {fast} + {smart} reachable", notes=notes
     )
 
 
@@ -274,7 +277,7 @@ def check_neo4j() -> Result:
     return Result("Neo4j", True, f"{uri} - {state}")
 
 
-CHECKS = [check_openrouter, check_qdrant, check_langfuse, check_tavily, check_neo4j]
+CHECKS = [check_gemini, check_qdrant, check_langfuse, check_tavily, check_neo4j]
 
 
 def main() -> int:

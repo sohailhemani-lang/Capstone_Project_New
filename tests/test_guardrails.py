@@ -978,6 +978,25 @@ class TestLiveRailBehaviour:
 
 class TestConfigWiring:
 
+    def test_settings_default_to_the_gemini_openai_compatible_endpoint(self):
+        from app.config import Settings
+
+        s = Settings(_env_file=None)
+        assert s.llm_base_url == "https://generativelanguage.googleapis.com/v1beta/openai/"
+        assert s.llm_fast_model == "gemini-3.8-flash"
+        assert s.llm_smart_model == "gemini-pro-latest"
+
+    def test_settings_accept_gemini_environment_names(self, monkeypatch):
+        from app.config import Settings
+
+        monkeypatch.setenv("GEMINI_API_KEY", "gemini-test-key")
+        monkeypatch.setenv("OPENAI_API_KEY", "openai-fallback")
+        monkeypatch.setenv("GEMINI_BASE_URL", "https://gemini.example/v1beta/openai/")
+        monkeypatch.setenv("OPENAI_BASE_URL", "https://openai.example/v1")
+        s = Settings(_env_file=None)
+        assert s.llm_api_key == "gemini-test-key"
+        assert s.llm_base_url == "https://gemini.example/v1beta/openai/"
+
     def test_config_declares_the_rails_the_phase_requires(self):
         cfg = Guardrails(agent_fn=lambda q: None)._build_config()
         assert cfg.rails.input.flows == [
@@ -991,13 +1010,14 @@ class TestConfigWiring:
         # NeMo answers questions itself with gpt-4o-mini and no retrieval.
         assert Guardrails(agent_fn=lambda q: None)._build_config().passthrough is True
 
-    def test_rails_llm_is_the_fast_tier_pointed_at_openrouter(self):
+    def test_rails_llm_is_the_fast_tier_pointed_at_gemini(self):
         from app.config import Settings
-        s = Settings(openrouter_api_key="test-key")
+        s = Settings(llm_api_key="test-key")
         cfg = Guardrails(settings=s, agent_fn=lambda q: None)._build_config()
         main = next(m for m in cfg.models if m.type == "main")
         assert main.model == s.llm_fast_model
-        assert main.parameters["base_url"] == s.openrouter_base_url
+        assert main.parameters["base_url"] == s.llm_base_url
+        assert main.parameters["api_key"] == "test-key"
         assert main.parameters["temperature"] == 0.0
         # Rails run non-streaming: an output rail cannot inspect tokens the
         # user has already read. NeMo 0.24 rejects an explicit `streaming`

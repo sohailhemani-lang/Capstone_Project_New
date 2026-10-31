@@ -7,9 +7,9 @@ this app run on langchain-core 1.6.1 / langgraph 1.2.11. Installing ragas into
 the main venv would silently downgrade the agent's runtime. The two processes
 share nothing but the JSONL files in ./data.
 
-Judge: gpt-4o-mini through OpenRouter's OpenAI-compatible endpoint. RAGAS did
-not fight the base URL -- it takes any LangChain BaseChatModel through
-LangchainLLMWrapper, so pointing ChatOpenAI at OpenRouter is all it needed.
+Judge: Gemini through Google's OpenAI-compatible endpoint. RAGAS takes any
+LangChain BaseChatModel through LangchainLLMWrapper, so ChatOpenAI can use the
+same Gemini endpoint as the application.
 
 Embeddings: answer_relevancy needs an embedding model, and OpenRouter serves no
 embeddings endpoint. Rather than reach for a second provider, this uses the
@@ -53,9 +53,15 @@ def _env(name: str) -> str:
 
 def build_judge():
     llm = ChatOpenAI(
-        model="openai/gpt-4o-mini",
-        api_key=_env("OPENROUTER_API_KEY"),
-        base_url=os.environ.get("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
+        model=os.environ.get("LLM_FAST_MODEL", "gemini-3.8-flash"),
+        api_key=os.getenv("GEMINI_API_KEY") or _env("OPENAI_API_KEY"),
+        base_url=(
+            os.getenv("GEMINI_BASE_URL")
+            or os.environ.get(
+                "OPENAI_BASE_URL",
+                "https://generativelanguage.googleapis.com/v1beta/openai/",
+            )
+        ),
         temperature=0.0,
         timeout=120,
         max_retries=3,
@@ -77,8 +83,7 @@ def load(name: str) -> Dataset:
 def main() -> int:
     RESULTS.mkdir(exist_ok=True)
     llm, emb = build_judge()
-    # Low concurrency and a generous timeout: OpenRouter rate-limits harder than
-    # the OpenAI endpoint RAGAS defaults assume, and a throttled judge returns
+    # Low concurrency and a generous timeout: a throttled judge returns
     # NaN, which averages into a silently better-looking score.
     run_config = RunConfig(timeout=180, max_workers=4, max_retries=5)
 
@@ -116,7 +121,7 @@ def main() -> int:
     # ------------------------------------------------------------- report
     cols = [m.name for m in METRICS]
     w = max(len(c) for c in CONFIGS) + 2
-    print("\n\nRAGAS ABLATION  (30 questions, judge = gpt-4o-mini via OpenRouter)\n")
+    print("\n\nRAGAS ABLATION  (30 questions, judge = configured Gemini fast model)\n")
     head = f"{'configuration':<{w}}" + "".join(f"{c[:18]:>20}" for c in cols) + f"{'NaN':>6}"
     print(head); print("-" * len(head))
     for name in CONFIGS:

@@ -56,7 +56,7 @@ Tavily (web search) are cloud services, reached with the Space's secrets.
 
 | Secret | Purpose |
 |---|---|
-| `OPENROUTER_API_KEY` | LLM calls (answers and the rails' own classifier) |
+| `GEMINI_API_KEY` (or `OPENAI_API_KEY`) | Gemini calls (answers and the rails' own classifier) |
 | `QDRANT_URL`, `QDRANT_API_KEY` | vector index + semantic cache (must already hold the `acme_docs` collection) |
 | `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_HOST` | tracing (optional; set `LANGFUSE_ENABLED=false` to disable) |
 | `TAVILY_API_KEY` | web-search tool (optional; the tool reports itself unavailable without it) |

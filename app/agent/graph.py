@@ -200,9 +200,9 @@ def build_agent_graph(toolbox: Toolbox, settings: Settings | None = None,
         """One LLM round-trip, as a Langfuse `generation` with usage and cost.
 
         Token counts come off `usage_metadata`, which langchain-openai fills
-        from the provider response; OpenRouter returns real usage, so these are
+        from the provider response; Gemini returns real usage, so these are
         measured rather than estimated. Cost is computed in the observability
-        module because Langfuse cannot price OpenRouter's `openai/` ids.
+        module when a model's pricing is known.
         """
         tracing = get_tracing()
         with tracing.generation(

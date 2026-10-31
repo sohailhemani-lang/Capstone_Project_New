@@ -1,7 +1,7 @@
-"""OpenRouter chat models, via langchain-openai's OpenAI-compatible client.
+"""Gemini chat models, via langchain-openai's OpenAI-compatible client.
 
-OpenRouter speaks the OpenAI wire protocol, so ChatOpenAI with a different
-base_url is the whole integration -- no provider shim, no adapter layer.
+Gemini's OpenAI-compatible endpoint lets ChatOpenAI handle requests without a
+provider shim or an additional SDK.
 
 Non-streaming on purpose: Phase 5 wraps the agent in NeMo Guardrails, whose
 output rails must see a complete answer before it reaches the user. Streaming
@@ -21,28 +21,20 @@ from app.llm.tiering import Task, fallback_model, pick_model
 
 log = logging.getLogger(__name__)
 
-# OpenRouter attributes traffic with these; harmless elsewhere.
-DEFAULT_HEADERS = {
-    "HTTP-Referer": "https://github.com/niti007/knowledge-graph-version-2",
-    "X-Title": "ACME Enterprise Knowledge Assistant",
-}
-
-
 def build_chat_model(model: str, settings: Settings | None = None,
                      temperature: float = 0.0, **kwargs: Any) -> BaseChatModel:
-    """A ChatOpenAI pointed at OpenRouter. One place that knows the wiring."""
+    """A ChatOpenAI pointed at Gemini. One place that knows the wiring."""
     from langchain_openai import ChatOpenAI
 
     s = settings or get_settings()
     return ChatOpenAI(
         model=model,
-        api_key=s.openrouter_api_key or "missing",
-        base_url=s.openrouter_base_url,
+        api_key=s.llm_api_key or "missing",
+        base_url=s.llm_base_url,
         temperature=temperature,
         streaming=False,
         timeout=60,
         max_retries=2,
-        default_headers=DEFAULT_HEADERS,
         **kwargs,
     )
 

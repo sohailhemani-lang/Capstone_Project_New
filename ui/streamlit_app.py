@@ -18,9 +18,10 @@ import os
 import httpx
 import streamlit as st
 
+from app.config import get_settings
 from history_search import search_history
 
-API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
+API_URL = os.getenv("API_URL", f"http://127.0.0.1:{get_settings().api_port}")
 TIMEOUT = float(os.getenv("UI_TIMEOUT", "120"))
 
 st.set_page_config(page_title="ACME Knowledge Assistant", page_icon="📚",
