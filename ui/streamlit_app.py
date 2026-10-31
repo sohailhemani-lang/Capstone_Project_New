@@ -18,7 +18,7 @@ import os
 import httpx
 import streamlit as st
 
-from ui.history_search import search_history
+from history_search import search_history
 
 API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
 TIMEOUT = float(os.getenv("UI_TIMEOUT", "120"))
