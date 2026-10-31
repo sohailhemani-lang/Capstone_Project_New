@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 """Streamlit demo client. Deliberately thin.
 
 This file speaks HTTP to the API and nothing else. It does not import the agent,
