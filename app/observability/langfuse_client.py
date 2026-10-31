@@ -48,11 +48,8 @@ RETRIEVER = "retriever"
 GUARDRAIL = "guardrail"
 AGENT = "agent"
 
-# OpenRouter list prices, USD per 1M tokens, as of the Phase 7 run. Langfuse
-# prices known model ids itself, but it does not know OpenRouter's `openai/`
-# prefixes, so the cost that appears on a generation is computed here and sent
-# explicitly. Wrong-but-visible beats absent: these are the numbers the tiering
-# table in the Phase 7 report is built from, and they are one edit from current.
+# Historical OpenRouter prices used by the Phase 7 report. Gemini model ids are
+# intentionally unpriced here, so `cost_usd` returns None for current model calls.
 MODEL_PRICES_USD_PER_MTOK: dict[str, tuple[float, float]] = {
     "openai/gpt-4o": (2.50, 10.00),
     "openai/gpt-4o-mini": (0.15, 0.60),

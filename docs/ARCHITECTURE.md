@@ -89,7 +89,7 @@ flowchart LR
     AG --> RN
 
     subgraph LLM["app/llm"]
-        TI[tiering.py<br/>task → fast/smart] --> CL[client.py<br/>ChatOpenAI → OpenRouter<br/>streaming=False]
+        TI[tiering.py<br/>task → fast/smart] --> CL[client.py<br/>native Gemini SDK<br/>tool-call signatures preserved]
         CA[cache.py<br/>structural guard · namespace]
     end
     RN --> CA
@@ -123,6 +123,7 @@ flowchart LR
 | Hybrid | `retrieval/hybrid.py` | RRF → re-rank → top 5; three modes | abstention signals snapshotted before re-rank |
 | Tools | `agent/tools.py` | `knowledge_search`, `graph_query`, `web_search` | per-request ledger; `Literal` template names |
 | Agent | `agent/graph.py` | `agent ⟲ tools → END` | tools unbound at iteration 4; `build_citations(retrieved)` |
+| LLM | `llm/client.py` | Gemini native SDK for agent; compatible endpoint for rails | preserves Gemini thought signatures across tool calls |
 | Tiering | `llm/tiering.py` | task → configured Gemini Flash or Flash Lite model | unknown tasks go fast |
 | Cache | `llm/cache.py` | Qdrant `acme_cache`, 24 h TTL | 0.97 + structural inversion guard; masked key; namespace |
 | Rails | `guardrails/` | 3 input + 4 output rails; telemetry | agent is the generation step; ledger in a `ContextVar` |
@@ -199,7 +200,7 @@ flowchart LR
     end
     S4 --> Browser
     S3 --> Q[(Qdrant Cloud)]
-    S3 --> O[OpenRouter]
+    S3 --> O[Gemini API]
     S3 --> L[Langfuse Cloud]
     S3 --> T[Tavily]
 ```

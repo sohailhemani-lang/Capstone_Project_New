@@ -31,6 +31,8 @@ dependencies = [
   # Agent + LLM (Phase 4)
   "langgraph==1.2.11",
   "langchain-openai==1.6.0",
+  "langchain-google-genai==4.4.0",
+  "google-genai==2.34.0",
   "langchain-core==1.6.1",
   "tavily-python==0.8.0",
   # Guardrails (Phase 5). Pinned, like the rest: nemoguardrails pulls a wide

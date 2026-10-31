@@ -52,6 +52,10 @@ Each field has a typed default:
     llm_smart_model: str = "gemini-3.5-flash"
 ```
 
+The LangChain agent uses Gemini's native integration so tool calls retain the
+thought signatures Gemini requires. `llm_base_url` is used by NeMo Guardrails'
+OpenAI-compatible client.
+
 - Two model names, not one. Chapter 11 explains *tiering*: the fast model handles the
   rails' yes/no checks; the smart one runs the agent. Callers never name a model directly —
   they name a *task* and `app/llm/tiering.py` picks the tier.

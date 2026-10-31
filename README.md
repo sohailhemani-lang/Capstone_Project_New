@@ -23,8 +23,8 @@ other dependency) has no ownership record in the corpus — because the graph sa
 
 ## Quickstart
 
-Requires Python 3.11 via [`uv`](https://docs.astral.sh/uv/), Docker, and free accounts on
-OpenRouter, Qdrant Cloud, Langfuse Cloud and Tavily (exact pages in
+Requires Python 3.11 via [`uv`](https://docs.astral.sh/uv/), Docker, and accounts for
+Gemini, Qdrant Cloud, Langfuse Cloud and Tavily (exact pages in
 [`.env.example`](.env.example) and [Chapter 01](docs/course/01-tools-and-accounts.md)).
 
 ```bash
@@ -83,7 +83,7 @@ Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Narrative with all evalua
 | Hybrid retrieval (RRF, cross-encoder re-rank, abstention signals, 3 ablatable modes) | `app/retrieval/hybrid.py`, `graph.py`, `vector.py` |
 | Agent (LangGraph, 3 tools, structural 4-iteration bound, ledger-built citations) | `app/agent/` |
 | Guardrails (NeMo Colang rails, Presidio, 3-signal grounding, citation policy, telemetry) | `app/guardrails/` |
-| Model tiering + OpenRouter client | `app/llm/tiering.py`, `app/llm/client.py` |
+| Model tiering + native Gemini agent client | `app/llm/tiering.py`, `app/llm/client.py` |
 | Semantic cache (Qdrant, structural inversion guard) | `app/llm/cache.py` |
 | Observability (Langfuse, per-call cost, own trace ids, never breaks a request) | `app/observability/langfuse_client.py` |
 | API (`/chat`, `/health`, `/sessions/{id}`, `/metrics`, system card) | `app/api/` |
@@ -102,7 +102,9 @@ Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Narrative with all evalua
 
 ## Headline numbers
 
-All from the reports in `evals/` and the commit messages; nothing here is estimated.
+These are historical benchmark results from the original OpenRouter configuration; the
+current runtime uses Gemini, so these numbers are not a Gemini evaluation. All figures come
+from the reports in `evals/` and the commit messages; nothing here is estimated.
 
 | Measure | Result |
 |---|---|

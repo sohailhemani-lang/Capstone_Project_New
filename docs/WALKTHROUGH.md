@@ -5,6 +5,10 @@ Every number below comes from a report in `evals/`, a commit message, or the cod
 
 **Live:** https://sohailhemani-enterprise-knowledge-assistant.hf.space
 
+The evaluation figures and provider-specific observations below document the original
+OpenRouter runs. The current agent uses Gemini's native API; NeMo Guardrails uses Gemini's
+OpenAI-compatible endpoint.
+
 ---
 
 ## 1. Business problem

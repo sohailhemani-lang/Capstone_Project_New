@@ -24,8 +24,8 @@ class Settings(BaseSettings):
         populate_by_name=True,
     )
 
-    # Gemini's OpenAI-compatible endpoint lets both LangChain and NeMo share
-    # one credential and base URL. OPENAI_* remain accepted for compatibility.
+    # LangChain uses Gemini's native API for agent tool calls; NeMo uses the
+    # OpenAI-compatible endpoint below. OPENAI_* remain accepted for migration.
     llm_api_key: str = Field(
         default="",
         validation_alias=AliasChoices("GEMINI_API_KEY", "OPENAI_API_KEY"),

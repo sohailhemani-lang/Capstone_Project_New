@@ -14,7 +14,8 @@ short_description: Hybrid vector+graph RAG with guardrails over enterprise docs
 An agentic RAG assistant over a synthetic enterprise corpus (policies, SOPs,
 incident reports, system manuals, FAQ). Retrieval is hybrid: dense vectors in
 Qdrant Cloud fused with a Neo4j knowledge graph (systems, teams, leads,
-dependencies), re-ranked, then answered by an LLM through OpenRouter. Every
+dependencies), re-ranked, then answered by Gemini. The agent uses Gemini's native
+API for tool calls; NeMo Guardrails uses its OpenAI-compatible endpoint. Every
 turn passes NeMo Guardrails input/output rails (PII masking, jailbreak and
 topic checks, a structural grounding check, citation verification) and is
 traced to Langfuse.
@@ -35,7 +36,7 @@ One container, four steps (`start.sh`), each timed in the Space logs:
    guardrail models (pre-downloaded into the image; no Hub traffic on boot).
 4. **Streamlit** serves on port 7860 and talks to the API over localhost.
 
-Qdrant (vectors + semantic cache), Langfuse (traces), OpenRouter (LLM) and
+Qdrant (vectors + semantic cache), Langfuse (traces), Gemini (LLM) and
 Tavily (web search) are cloud services, reached with the Space's secrets.
 
 ## Honest operational notes
@@ -46,7 +47,7 @@ Tavily (web search) are cloud services, reached with the Space's secrets.
 - **Free Spaces sleep after 48 hours without traffic.** The first visit after
   that pays the cold start again; the graph is rebuilt, the vector index is not
   (it lives in Qdrant Cloud and is unaffected).
-- Each answer costs real LLM tokens on the owner's OpenRouter account; the
+- Each answer costs real LLM tokens on the owner's Gemini API account; the
   semantic cache (`cached: true` in the API response) absorbs exact and
   paraphrased repeats.
 - Neo4j data is not persisted across restarts by design; nothing is lost

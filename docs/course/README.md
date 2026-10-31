@@ -33,9 +33,14 @@ honest one is the one printed.
 
 ## What you'll need (details in Chapter 01)
 
-A computer with Python 3.11, Docker, and Node.js; free accounts on OpenRouter (the AI
-model), Qdrant Cloud (vector database), Langfuse Cloud (tracing), and Tavily (web search).
-Budget: the whole build including every evaluation run cost **$3.18** of OpenRouter credit.
+A computer with Python 3.11, Docker, and Node.js; a Gemini API key, Qdrant Cloud (vector
+database), Langfuse Cloud (tracing), and Tavily (web search). The original OpenRouter-based
+evaluation run cost **$3.18** in OpenRouter credit.
+
+> **Provider update:** Some chapter examples describe the original OpenRouter implementation.
+> The current app uses Gemini; use the repository's current `.env.example`, `app/config.py`,
+> and `app/llm/client.py` when setting up or changing providers. Evaluation figures remain
+> historical and are not Gemini benchmark results.
 
 ---
 

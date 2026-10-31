@@ -1,7 +1,7 @@
-"""Gemini chat models, via langchain-openai's OpenAI-compatible client.
+"""Native Gemini chat models for the agent and its tool calls.
 
-Gemini's OpenAI-compatible endpoint lets ChatOpenAI handle requests without a
-provider shim or an additional SDK.
+The native adapter preserves Gemini thought signatures across tool rounds.
+NeMo's rails use the OpenAI-compatible endpoint independently.
 
 Non-streaming on purpose: Phase 5 wraps the agent in NeMo Guardrails, whose
 output rails must see a complete answer before it reaches the user. Streaming
@@ -24,18 +24,18 @@ log = logging.getLogger(__name__)
 def build_chat_model(model: str, settings: Settings | None = None,
                      temperature: float = 0.0, **kwargs: Any) -> BaseChatModel:
     """A ChatOpenAI pointed at Gemini. One place that knows the wiring."""
-    from langchain_openai import ChatOpenAI
+    from langchain_google_genai import ChatGoogleGenerativeAI
 
     s = settings or get_settings()
-    kwargs.setdefault("reasoning_effort", "low")
-    return ChatOpenAI(
+    kwargs.setdefault("thinking_level", "low")
+    return ChatGoogleGenerativeAI(
         model=model,
         api_key=s.llm_api_key or "missing",
-        base_url=s.llm_base_url,
+        vertexai=False,
         temperature=temperature,
-        streaming=False,
         timeout=60,
         max_retries=2,
+        streaming=False,
         **kwargs,
     )
 

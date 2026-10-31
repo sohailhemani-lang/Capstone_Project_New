@@ -22,7 +22,22 @@ from app.agent.graph import (
 from app.agent.tools import GRAPH_TEMPLATES, NO_RESULTS, Toolbox, UnknownTemplateError
 from app.config import Settings
 from app.llm.tiering import Task, Tier, pick_model, fallback_model, tier_for
+from app.llm.client import build_chat_model
 from app.retrieval.hybrid import RetrievedItem, RetrievalResult
+
+
+def test_model_client_uses_native_gemini_for_tool_rounds():
+    from langchain_google_genai import ChatGoogleGenerativeAI
+
+    settings = Settings(_env_file=None, llm_api_key="test-key")
+    model = build_chat_model(settings.llm_smart_model, settings=settings)
+
+    assert isinstance(model, ChatGoogleGenerativeAI)
+    assert model.model == settings.llm_smart_model
+    assert model.vertexai is False
+    assert model.thinking_level == "low"
+    assert model.timeout == 60.0
+    assert model.max_retries == 2
 
 
 # --------------------------------------------------------------- fake model

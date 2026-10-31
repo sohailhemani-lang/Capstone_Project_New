@@ -30,7 +30,7 @@ curl -s localhost:8077/health          # wait for "ready": true
 
 # terminal 2 — from the repo root
 cd evals/promptfoo
-set -a && . ../../.env && set +a       # OPENROUTER_API_KEY for the llm-rubric judge
+set -a && . ../../.env && set +a       # Gemini key and OPENAI_BASE_URL for the judge
 npx -y promptfoo@0.118.11 eval -c promptfooconfig.yaml --no-cache -j 4 --output results.json
 npx -y promptfoo@0.118.11 view         # optional: the HTML report
 ```
@@ -54,7 +54,7 @@ assertion is the entire `ChatResponse` object. That matters:
   id or a field name inside the serialised envelope.
 - **`llm-rubric`** covers the claims a substring cannot: "does not attribute
   INC-205 to the wrong root cause", "does not invent an SOP number". Judge is
-  `openrouter:openai/gpt-4o-mini`, the same judge RAGAS uses, so both reports
+  `openai:gemini-3.5-flash-lite`, the same judge RAGAS uses, so both reports
   are graded by one model.
 
 A global `defaultTest` assertion applies the envelope contract to all 37 cases:

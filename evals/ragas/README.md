@@ -7,7 +7,8 @@ to keep.
 
 ## Headline
 
-30 questions, judge `openai/gpt-4o-mini` via OpenRouter, four configurations.
+Historical baseline: 30 questions, judge `openai/gpt-4o-mini` via OpenRouter,
+four configurations. The current RAGAS runner uses Gemini.
 **Zero NaN cells in 480 metric evaluations** — every number below is a real
 judged score, not a hole averaged over.
 
@@ -189,12 +190,11 @@ Phase 9 scorecard, not here.
 field naming the `doc_id` or the Cypher relation it came from, so a disputed
 answer key is one grep away from being re-checked.
 
-### RAGAS and OpenRouter
+### RAGAS and Gemini
 
-RAGAS did **not** fight the OpenAI-compatible base URL. It accepts any LangChain
-`BaseChatModel` through `LangchainLLMWrapper`, so a `ChatOpenAI` pointed at
-`https://openrouter.ai/api/v1` works with no patching. Two things did need
-handling, both reported rather than worked around:
+RAGAS accepts any LangChain `BaseChatModel` through `LangchainLLMWrapper`, so
+the current runner points `ChatOpenAI` at Gemini's OpenAI-compatible endpoint.
+Two things did need handling, both reported rather than worked around:
 
 1. **Version pinning.** `ragas` resolves to 0.4.3 by default, which imports
    `langchain_community.chat_models.vertexai` — a module removed in
@@ -207,9 +207,8 @@ handling, both reported rather than worked around:
    operates in. Note this for comparability: these `answer_relevancy` numbers are
    not directly comparable to published figures computed with OpenAI embeddings.
 
-`RunConfig(max_workers=4, timeout=180, max_retries=5)` is deliberate. OpenRouter
-rate-limits harder than the OpenAI endpoint RAGAS' defaults assume, and a
-throttled judge returns NaN — which pandas averages away, quietly making a
+`RunConfig(max_workers=4, timeout=180, max_retries=5)` is deliberate. Provider
+rate limits can cause a judge to return NaN — which pandas averages away, quietly making a
 broken run look like a good one. `run_ragas.py` reports `nan_cells` per
 configuration for exactly that reason. It was 0 for all four.
 

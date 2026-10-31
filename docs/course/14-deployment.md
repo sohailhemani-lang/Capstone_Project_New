@@ -12,7 +12,7 @@ sounds simple and was cut from the plan once, for a specific reason:
 The resolution is the whole chapter: run **Neo4j Community inside the container** and
 rebuild the 98-node graph from the corpus on every boot. The graph is deterministic
 (Chapter 06), so a rebuild is seconds, needs no persistent disk, no cloud database, and no
-new credentials. Qdrant, Langfuse, OpenRouter and Tavily were already cloud services.
+new credentials. Gemini, Qdrant, Langfuse and Tavily are cloud services.
 
 **Live:** https://sohailhemani-enterprise-knowledge-assistant.hf.space
 
@@ -217,7 +217,7 @@ back from Langfuse Cloud.
 - **Required secrets** (Settings → Variables and secrets): `GEMINI_API_KEY` (or `OPENAI_API_KEY`),
   `QDRANT_URL`, `QDRANT_API_KEY`; optional `LANGFUSE_*` and `TAVILY_API_KEY`. `start.sh`
   refuses to boot without the first three and says which is missing.
-- **Each answer costs real tokens** on the owner's OpenRouter account.
+- **Each answer costs real tokens** on the owner's Gemini API account.
 - `README_HF.md` is the Space's own README, with the `sdk: docker` / `app_port: 7860`
   frontmatter Hugging Face reads.
 
