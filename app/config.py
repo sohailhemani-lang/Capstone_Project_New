@@ -34,8 +34,8 @@ class Settings(BaseSettings):
         default="https://generativelanguage.googleapis.com/v1beta/openai/",
         validation_alias=AliasChoices("GEMINI_BASE_URL", "OPENAI_BASE_URL"),
     )
-    llm_fast_model: str = "gemini-3.8-flash"
-    llm_smart_model: str = "gemini-pro-latest"
+    llm_fast_model: str = "gemini-3.5-flash-lite"
+    llm_smart_model: str = "gemini-3.5-flash"
 
     # --- Qdrant ---
     qdrant_url: str = ""

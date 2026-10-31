@@ -48,8 +48,8 @@ Each field has a typed default:
     # --- Gemini / LLM ---
     llm_api_key: str = ""  # GEMINI_API_KEY or OPENAI_API_KEY
     llm_base_url: str = "https://generativelanguage.googleapis.com/v1beta/openai/"
-    llm_fast_model: str = "gemini-3.8-flash"
-    llm_smart_model: str = "gemini-pro-latest"
+    llm_fast_model: str = "gemini-3.5-flash-lite"
+    llm_smart_model: str = "gemini-3.5-flash"
 ```
 
 - Two model names, not one. Chapter 11 explains *tiering*: the fast model handles the

@@ -35,7 +35,7 @@ defaultTest:
   options:
     # Judge for every llm-rubric. Gemini Flash for cost control;
     # the same judge RAGAS uses, so the two reports are graded by one model.
-    provider: openai:gemini-3.8-flash
+    provider: openai:gemini-3.5-flash-lite
   assert:
     # Contract-level invariant, applied to all 37 cases: the envelope is
     # well-formed and the answer is non-trivial.

@@ -214,6 +214,7 @@ class Guardrails:
             model.model = pick_model(Task.SELF_CHECK, s)
             params = dict(model.parameters or {})
             params.setdefault("temperature", 0.0)
+            params.setdefault("reasoning_effort", "low")
             params["base_url"] = s.llm_base_url
             params["api_key"] = s.llm_api_key or "missing"
             # Note: no `streaming` kwarg. NeMo 0.24's default framework

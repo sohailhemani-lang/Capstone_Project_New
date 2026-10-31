@@ -27,6 +27,7 @@ def build_chat_model(model: str, settings: Settings | None = None,
     from langchain_openai import ChatOpenAI
 
     s = settings or get_settings()
+    kwargs.setdefault("reasoning_effort", "low")
     return ChatOpenAI(
         model=model,
         api_key=s.llm_api_key or "missing",

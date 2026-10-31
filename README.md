@@ -54,7 +54,7 @@ flowchart TD
     API --> IN[NeMo input rails<br/>mask PII · jailbreak · topic]
     IN --> CACHE{Semantic cache<br/>Qdrant acme_cache<br/>cosine ≥ 0.97 + structural guard}
     CACHE -->|hit: replay evidence| OUT
-    CACHE -->|miss| AGENT[LangGraph agent<br/>Gemini Pro · ≤ 4 tool rounds]
+    CACHE -->|miss| AGENT[LangGraph agent<br/>Gemini Flash · ≤ 4 tool rounds]
     AGENT --> KS[knowledge_search<br/>vector + graph → RRF → bge re-rank → top 5]
     AGENT --> GQ[graph_query<br/>8 parameterized Cypher templates]
     AGENT --> WS[web_search<br/>Tavily]
@@ -63,9 +63,9 @@ flowchart TD
     GQ --> NEO
     AGENT -->|citations built from ledger| OUT[NeMo output rails<br/>policy · grounding · PII · citations]
     OUT --> RESP[answer + citations + trace_id]
-    IN -.->|Gemini Flash| GEM[Gemini API]
-    AGENT -.->|Gemini Pro| GEM
-    OUT -.->|Gemini Flash| GEM
+    IN -.->|Gemini Flash Lite| GEM[Gemini API]
+    AGENT -.->|Gemini Flash| GEM
+    OUT -.->|Gemini Flash Lite| GEM
     API -.->|every span, cost per call| LF[Langfuse Cloud]
 ```
 

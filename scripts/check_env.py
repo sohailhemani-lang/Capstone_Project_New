@@ -74,8 +74,8 @@ def check_gemini() -> Result:
             "https://generativelanguage.googleapis.com/v1beta/openai/",
         )
     )
-    fast = os.getenv("LLM_FAST_MODEL", "gemini-3.8-flash")
-    smart = os.getenv("LLM_SMART_MODEL", "gemini-pro-latest")
+    fast = os.getenv("LLM_FAST_MODEL", "gemini-3.5-flash-lite")
+    smart = os.getenv("LLM_SMART_MODEL", "gemini-3.5-flash")
     notes: list[str] = []
 
     try:
@@ -107,6 +107,7 @@ def check_gemini() -> Result:
                 headers=headers,
                 json={
                     "model": fast,
+                    "reasoning_effort": "low",
                     "messages": [{"role": "user", "content": "Reply with: ok"}],
                     "max_tokens": 8,
                 },
@@ -124,8 +125,10 @@ def check_gemini() -> Result:
                 headers=headers,
                 json={
                     "model": fast,
+                    "reasoning_effort": "low",
                     "messages": [{"role": "user", "content": "Weather in Paris?"}],
                     "stream": False,
+                    "tool_choice": "required",
                     "tools": [{
                         "type": "function",
                         "function": {

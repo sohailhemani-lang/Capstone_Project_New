@@ -41,7 +41,7 @@ Streamlit ──► FastAPI /chat
                   │
             semantic cache          Qdrant acme_cache, cosine ≥ 0.97 + structural guard
                   │ miss
-            LangGraph agent         Gemini Pro, ≤ 4 tool rounds, tools unbound at the ceiling
+            LangGraph agent         Gemini Flash, ≤ 4 tool rounds, tools unbound at the ceiling
                   ├─ knowledge_search  →  Qdrant + Neo4j → RRF → bge re-rank → top-5
                   ├─ graph_query        →  8 parameterized Cypher templates
                   └─ web_search         →  Tavily
@@ -53,7 +53,7 @@ Streamlit ──► FastAPI /chat
 
 | Layer | Choice |
 |---|---|
-| LLM | Gemini API → configured Pro model (agent), Flash model (rails, 5 calls/request) |
+| LLM | Gemini API → Flash model (agent), Flash Lite model (rails, 5 calls/request) |
 | Embeddings / re-rank | local `BAAI/bge-small-en-v1.5` (384-d) / `BAAI/bge-reranker-base` |
 | Vector store + cache | Qdrant Cloud, collections `acme_docs` (66 points) and `acme_cache` |
 | Graph | Neo4j 5 — Docker locally (ports 7475/7688); embedded in the Space container |

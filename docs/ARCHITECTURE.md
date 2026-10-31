@@ -29,7 +29,7 @@ sequenceDiagram
         SC-->>A: system card text (~1 ms)
     else corpus question
         A->>R: await arun(question)
-        R->>R: mask PII → jailbreak check → topic check (Gemini Flash)
+        R->>R: mask PII → jailbreak check → topic check (Gemini Flash Lite)
         alt input rail fires
             R-->>A: blocked_by, blocked_stage, no citations
         else passes
@@ -38,7 +38,7 @@ sequenceDiagram
                 C-->>R: original answer + citations + abstention evidence
             else miss
                 R->>G: run_agent(masked question)  [asyncio.to_thread]
-                loop ≤ 4 rounds (Gemini Pro)
+                loop ≤ 4 rounds (Gemini Flash)
                     G->>T: knowledge_search / graph_query / web_search
                     T-->>G: text + RetrievedItems into ledger
                 end
@@ -123,7 +123,7 @@ flowchart LR
 | Hybrid | `retrieval/hybrid.py` | RRF → re-rank → top 5; three modes | abstention signals snapshotted before re-rank |
 | Tools | `agent/tools.py` | `knowledge_search`, `graph_query`, `web_search` | per-request ledger; `Literal` template names |
 | Agent | `agent/graph.py` | `agent ⟲ tools → END` | tools unbound at iteration 4; `build_citations(retrieved)` |
-| Tiering | `llm/tiering.py` | task → configured Gemini Pro or Flash model | unknown tasks go fast |
+| Tiering | `llm/tiering.py` | task → configured Gemini Flash or Flash Lite model | unknown tasks go fast |
 | Cache | `llm/cache.py` | Qdrant `acme_cache`, 24 h TTL | 0.97 + structural inversion guard; masked key; namespace |
 | Rails | `guardrails/` | 3 input + 4 output rails; telemetry | agent is the generation step; ledger in a `ContextVar` |
 | API | `api/main.py` | `/chat`, `/health`, `/sessions/{id}`, `/metrics` | async end-to-end; warmup at startup; system-card route |

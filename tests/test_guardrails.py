@@ -982,9 +982,12 @@ class TestConfigWiring:
         from app.config import Settings
 
         s = Settings(_env_file=None)
-        assert s.llm_base_url == "https://generativelanguage.googleapis.com/v1beta/openai/"
-        assert s.llm_fast_model == "gemini-3.8-flash"
-        assert s.llm_smart_model == "gemini-pro-latest"
+        assert (
+            s.llm_base_url
+            == "https://generativelanguage.googleapis.com/v1beta/openai/"
+        )
+        assert s.llm_fast_model == "gemini-3.5-flash-lite"
+        assert s.llm_smart_model == "gemini-3.5-flash"
 
     def test_settings_accept_gemini_environment_names(self, monkeypatch):
         from app.config import Settings
@@ -1006,8 +1009,8 @@ class TestConfigWiring:
             "mask pii on output", "guard answer citations"]
 
     def test_generation_is_delegated_to_the_agent_not_the_rails_llm(self):
-        # `passthrough` is what makes the agent the generation step. Without it
-        # NeMo answers questions itself with gpt-4o-mini and no retrieval.
+        # `passthrough` delegates generation to the agent; otherwise NeMo would
+        # answer without retrieval.
         assert Guardrails(agent_fn=lambda q: None)._build_config().passthrough is True
 
     def test_rails_llm_is_the_fast_tier_pointed_at_gemini(self):
@@ -1019,6 +1022,7 @@ class TestConfigWiring:
         assert main.parameters["base_url"] == s.llm_base_url
         assert main.parameters["api_key"] == "test-key"
         assert main.parameters["temperature"] == 0.0
+        assert main.parameters["reasoning_effort"] == "low"
         # Rails run non-streaming: an output rail cannot inspect tokens the
         # user has already read. NeMo 0.24 rejects an explicit `streaming`
         # kwarg, and nothing here calls stream_async, so the default holds.

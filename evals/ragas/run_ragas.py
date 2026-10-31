@@ -53,7 +53,8 @@ def _env(name: str) -> str:
 
 def build_judge():
     llm = ChatOpenAI(
-        model=os.environ.get("LLM_FAST_MODEL", "gemini-3.8-flash"),
+        model=os.environ.get("LLM_FAST_MODEL", "gemini-3.5-flash-lite"),
+        reasoning_effort="low",
         api_key=os.getenv("GEMINI_API_KEY") or _env("OPENAI_API_KEY"),
         base_url=(
             os.getenv("GEMINI_BASE_URL")
