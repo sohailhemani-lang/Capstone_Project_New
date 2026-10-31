@@ -14,7 +14,7 @@ rebuild the 98-node graph from the corpus on every boot. The graph is determinis
 (Chapter 06), so a rebuild is seconds, needs no persistent disk, no cloud database, and no
 new credentials. Qdrant, Langfuse, OpenRouter and Tavily were already cloud services.
 
-**Live:** https://nitishgalat-enterprise-knowledge-assistant.hf.space
+**Live:** https://sohailhemani-enterprise-knowledge-assistant.hf.space
 
 > 🔑 **New word — Hugging Face Space:** free hosting for ML demos. A *Docker* Space builds
 > your `Dockerfile` and runs the container, exposing one port (7860 here).

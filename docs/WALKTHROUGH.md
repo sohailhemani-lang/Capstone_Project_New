@@ -3,7 +3,7 @@
 Enterprise Knowledge Assistant — the eight sections the capstone specification requires.
 Every number below comes from a report in `evals/`, a commit message, or the code.
 
-**Live:** https://nitishgalat-enterprise-knowledge-assistant.hf.space
+**Live:** https://sohailhemani-enterprise-knowledge-assistant.hf.space
 
 ---
 

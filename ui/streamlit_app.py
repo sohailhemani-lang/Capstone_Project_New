@@ -18,6 +18,8 @@ import os
 import httpx
 import streamlit as st
 
+from ui.history_search import search_history
+
 API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
 TIMEOUT = float(os.getenv("UI_TIMEOUT", "120"))
 
@@ -128,6 +130,8 @@ if "history" not in st.session_state:
     st.session_state.history = []
 if "session_id" not in st.session_state:
     st.session_state.session_id = None
+if "history_search_query" not in st.session_state:
+    st.session_state.history_search_query = ""
 
 with st.sidebar:
     st.header("ACME Knowledge Assistant")
@@ -151,9 +155,33 @@ with st.sidebar:
     if st.button("New session"):
         st.session_state.history = []
         st.session_state.session_id = None
+        st.session_state.history_search_query = ""
         st.rerun()
     st.caption("Sessions live in the API's memory. Restarting the API clears "
                "them; a stale id just starts a new one.")
+
+with st.expander("Search conversation history"):
+    search_query = st.text_input(
+        "Search messages and response fields",
+        key="history_search_query",
+        placeholder="Search this session's messages, citations, and metadata",
+    )
+    if search_query.strip():
+        search_results = search_history(st.session_state.history, search_query)
+        st.caption(f"{len(search_results)} matching message(s) in this session")
+        if search_results:
+            for result in search_results:
+                with st.container(border=True):
+                    st.markdown(
+                        f"**Entry {result.entry_index + 1} · "
+                        f"{result.role.title()}**"
+                    )
+                    for field in result.fields:
+                        st.markdown(f"- `{field.name}`: {field.value}")
+        else:
+            st.info("No messages match that search.")
+    else:
+        st.caption("Search message text, citations, and response metadata.")
 
 for turn in st.session_state.history:
     with st.chat_message(turn["role"]):

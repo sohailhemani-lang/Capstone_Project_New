@@ -6,7 +6,7 @@ cache**, **Langfuse** tracing, a **FastAPI** service with a **Streamlit** UI, a 
 evaluation package, and a public **Hugging Face** deployment with Neo4j embedded in the
 container.
 
-> **Live demo:** https://nitishgalat-enterprise-knowledge-assistant.hf.space
+> **Live demo:** https://sohailhemani-enterprise-knowledge-assistant.hf.space
 > (free tier: sleeps after 48 h idle; first visit after that takes ~41 s to boot)
 >
 > **Course:** [docs/course/README.md](docs/course/README.md) — 16 beginner chapters that
@@ -87,7 +87,7 @@ Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Narrative with all evalua
 | Semantic cache (Qdrant, structural inversion guard) | `app/llm/cache.py` |
 | Observability (Langfuse, per-call cost, own trace ids, never breaks a request) | `app/observability/langfuse_client.py` |
 | API (`/chat`, `/health`, `/sessions/{id}`, `/metrics`, system card) | `app/api/` |
-| UI | `ui/streamlit_app.py` |
+| UI (chat and current-session history search across messages, citations, and response fields) | `ui/streamlit_app.py` |
 | Tests (473) | `tests/` |
 | Promptfoo suite (37 cases, 35 pass) | `evals/promptfoo/` |
 | RAGAS ablation (30 questions × 4 configurations) | `evals/ragas/report.md` |

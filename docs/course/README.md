@@ -9,7 +9,7 @@ Written for **complete beginners**. Every technical term is explained the first 
 appears, and every meaningful piece of code is shown as a real excerpt from this repository
 and explained in plain English — what it does *and* why it is there.
 
-> **Live demo:** https://nitishgalat-enterprise-knowledge-assistant.hf.space
+> **Live demo:** https://sohailhemani-enterprise-knowledge-assistant.hf.space
 > **Code:** `github.com/niti007/knowledge-graph-version-2`
 
 One thing makes this course different from a tutorial: the numbers are real. Every figure you

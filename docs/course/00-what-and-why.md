@@ -190,7 +190,7 @@ multi-hop question above through the real stack.
 
 ## ▶️ Run this now
 No installation yet. Open the live demo at
-https://nitishgalat-enterprise-knowledge-assistant.hf.space (if it shows "Not ready", it is
+https://sohailhemani-enterprise-knowledge-assistant.hf.space (if it shows "Not ready", it is
 waking from its 48-hour sleep; wait about a minute and refresh) and ask:
 
 > Which team owns the system Payment-Service depends on, and who leads it?
