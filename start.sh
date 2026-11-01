@@ -55,7 +55,7 @@ done
 cleanup() {
   log "shutting down"
   [ -n "${API_PID:-}" ]   && kill "$API_PID"   2>/dev/null || true
-  [ -n "${NEO4J_PID:-}" ] && kill "$NEO4J_PID" 2>/dev/null || true
+#  [ -n "${NEO4J_PID:-}" ] && kill "$NEO4J_PID" 2>/dev/null || true
 }
 trap cleanup EXIT INT TERM
 
@@ -76,7 +76,7 @@ with GraphDatabase.driver(sys.argv[1], auth=None) as d:
     d.verify_connectivity()
 PY
 do
-  kill -0 "$NEO4J_PID" 2>/dev/null || { tail -n 40 /var/log/neo4j/console.log; die "neo4j process exited"; }
+#  kill -0 "$NEO4J_PID" 2>/dev/null || { tail -n 40 /var/log/neo4j/console.log; die "neo4j process exited"; }
   [ "$(date +%s)" -lt "$deadline" ] || { tail -n 40 /var/log/neo4j/console.log; die "neo4j did not accept bolt on ${BOLT_HOST}:${BOLT_PORT} within ${NEO4J_WAIT}s"; }
   sleep 1
 done
