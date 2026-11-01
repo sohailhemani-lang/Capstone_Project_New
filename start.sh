@@ -33,10 +33,10 @@ cd /app
 # Space overrode the Dockerfile ENV, the embedded instance came up fine on
 # localhost, and boot spent 120s waiting on a hostname it should never have
 # looked at. Force the embedded endpoint and say so loudly if we overrode.
-EMBEDDED_URI="bolt://127.0.0.1:7687"
-if [ -n "${NEO4J_URI:-}" ] && [ "${NEO4J_URI}" != "${EMBEDDED_URI}" ]; then
-  log "WARNING: ignoring external NEO4J_URI=${NEO4J_URI}; this image runs its own Neo4j"
-fi
+# EMBEDDED_URI="bolt://127.0.0.1:7687"
+# if [ -n "${NEO4J_URI:-}" ] && [ "${NEO4J_URI}" != "${EMBEDDED_URI}" ]; then
+#  log "WARNING: ignoring external NEO4J_URI=${NEO4J_URI}; this image runs its own Neo4j"
+# fi
 
 log "boot as uid=$(id -u) gid=$(id -g)  NEO4J_URI=${NEO4J_URI}  TORCH_DEVICE=${TORCH_DEVICE:-auto}"
 
