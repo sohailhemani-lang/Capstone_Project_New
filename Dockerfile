@@ -77,7 +77,7 @@ COPY start.sh ./start.sh
 RUN pip install --no-deps --no-build-isolation -e . \
  && mkdir -p /app/data/processed && chmod +x /app/start.sh 
  # Assert no secret file entered the image. Build FAILS if one did.
- if find / -xdev \( -name ".env" -o -name ".env.*" \) -not -name ".env.example" \
+ RUN if find / -xdev \( -name ".env" -o -name ".env.*" \) -not -name ".env.example" \
         -not -path "*/site-packages/*" 2>/dev/null | grep -q .; then \
         echo "FATAL: a .env file is inside the image" >&2; exit 1; fi
 
