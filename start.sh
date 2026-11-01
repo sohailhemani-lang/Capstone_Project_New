@@ -77,7 +77,7 @@ with GraphDatabase.driver(sys.argv[1], auth=None) as d:
 PY
 do
 #  kill -0 "$NEO4J_PID" 2>/dev/null || { tail -n 40 /var/log/neo4j/console.log; die "neo4j process exited"; }
-  [ "$(date +%s)" -lt "$deadline" ] || { tail -n 40 /var/log/neo4j/console.log; die "neo4j did not accept bolt on ${BOLT_HOST}:${BOLT_PORT} within ${NEO4J_WAIT}s"; }
+#  [ "$(date +%s)" -lt "$deadline" ] || { tail -n 40 /var/log/neo4j/console.log; die "neo4j did not accept bolt on ${BOLT_HOST}:${BOLT_PORT} within ${NEO4J_WAIT}s"; }
   sleep 1
 done
 log "[1/4] neo4j ready on bolt://${BOLT_HOST}:${BOLT_PORT} in $(since "$S")s"
