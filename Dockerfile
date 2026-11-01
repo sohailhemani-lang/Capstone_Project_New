@@ -61,21 +61,21 @@ RUN mkdir -p app && touch app/__init__.py \
  && rm -rf app
 
 # --- Pre-download models at BUILD time (embedding, reranker, spaCy) ----------
-USER user
-COPY --chown=user:user docker/warm_models.py /tmp/warm_models.py
-RUN python /tmp/warm_models.py && rm /tmp/warm_models.py
-USER root
+# USER user
+# COPY --chown=user:user docker/warm_models.py /tmp/warm_models.py
+# RUN python /tmp/warm_models.py && rm /tmp/warm_models.py
+# USER root
 
 # --- Application code --------------------------------------------------------
-COPY --chown=user:user app ./app
-COPY --chown=user:user ui ./ui
-COPY --chown=user:user data/raw ./data/raw
-COPY --chown=user:user start.sh ./start.sh
+COPY app ./app
+COPY ui ./ui
+COPY data/raw ./data/raw
+COPY start.sh ./start.sh
 # Ingestion writes documents.jsonl / chunks.jsonl here on every boot.
 # Re-install the package (editable) so `app` resolves from /app, not the
 # placeholder used for the dependency layer above.
 RUN pip install --no-deps --no-build-isolation -e . \
- && mkdir -p /app/data/processed && chmod +x /app/start.sh && chown -R user:user /app \
+ && mkdir -p /app/data/processed && chmod +x /app/start.sh 
  # Assert no secret file entered the image. Build FAILS if one did.
  && if find / -xdev \( -name ".env" -o -name ".env.*" \) -not -name ".env.example" \
         -not -path "*/site-packages/*" 2>/dev/null | grep -q .; then \
