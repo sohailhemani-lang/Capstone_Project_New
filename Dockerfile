@@ -85,7 +85,7 @@ RUN pip install --no-deps --no-build-isolation -e . \
 # ENV NEO4J_URI=bolt://127.0.0.1:7687 \
 #    NEO4J_USER=neo4j \
 #    NEO4J_PASSWORD=embedded-no-auth \
-    TORCH_DEVICE=cpu \
+  ENV  TORCH_DEVICE=cpu \
     API_PORT=8000 \
     API_URL=http://127.0.0.1:8000 \
     APP_ENV=hf-space \
