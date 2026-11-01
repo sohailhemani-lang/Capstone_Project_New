@@ -34,8 +34,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # --- Non-root user. HF Spaces run the container as uid 1000; create that user
 #     now so every path below is owned by it whether or not HF overrides USER.
-# RUN useradd -m -u 1000 -s /bin/bash user \
-# && chown -R user:user $NEO4J_HOME /var/lib/neo4j /var/log/neo4j
+ RUN useradd -m -u 1000 -s /bin/bash user \
+ && chown -R user:user $NEO4J_HOME /var/lib/neo4j /var/log/neo4j
 ENV HOME=/home/user \
     PATH=/home/user/.local/bin:$NEO4J_HOME/bin:$PATH \
     PYTHONUNBUFFERED=1 \
@@ -61,7 +61,7 @@ RUN mkdir -p app && touch app/__init__.py \
  && rm -rf app
 
 # --- Pre-download models at BUILD time (embedding, reranker, spaCy) ----------
-# USER user
+ USER user
 # COPY --chown=user:user docker/warm_models.py /tmp/warm_models.py
 # RUN python /tmp/warm_models.py && rm /tmp/warm_models.py
 # USER root
