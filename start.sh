@@ -13,7 +13,7 @@
 # because a Space stuck at "Starting" with no output is the one failure mode
 # that cannot be debugged from outside.
 # =============================================================================
-set -euo pipefail
+set -xuo pipefail
 
 T0=$(date +%s.%N)
 since(){ awk -v a="$(date +%s.%N)" -v b="$1" 'BEGIN{printf "%.1f", a-b}'; }
