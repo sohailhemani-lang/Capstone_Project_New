@@ -37,9 +37,6 @@ EMBEDDED_URI="bolt://127.0.0.1:7687"
 if [ -n "${NEO4J_URI:-}" ] && [ "${NEO4J_URI}" != "${EMBEDDED_URI}" ]; then
   log "WARNING: ignoring external NEO4J_URI=${NEO4J_URI}; this image runs its own Neo4j"
 fi
-export NEO4J_URI="${EMBEDDED_URI}"
-export NEO4J_USER="${NEO4J_USER:-neo4j}"
-export NEO4J_PASSWORD="${NEO4J_PASSWORD:-embedded-no-auth}"
 
 log "boot as uid=$(id -u) gid=$(id -g)  NEO4J_URI=${NEO4J_URI}  TORCH_DEVICE=${TORCH_DEVICE:-auto}"
 
