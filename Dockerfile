@@ -34,9 +34,9 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # --- Non-root user. HF Spaces run the container as uid 1000; create that user
 #     now so every path below is owned by it whether or not HF overrides USER.
- RUN useradd -m -u 1000 -s /bin/bash user \
- RUN mkdir -p /var/lib/neo4j /var/log/neo4j
- RUN chown -R user:user $NEO4J_HOME /var/lib/neo4j /var/log/neo4j
+RUN useradd -m -u 1000 -s /bin/bash user
+RUN mkdir -p /var/lib/neo4j /var/log/neo4j
+RUN chown -R user:user /var/lib/neo4j /var/log/neo4j
 ENV HOME=/home/user \
     PATH=/home/user/.local/bin:$NEO4J_HOME/bin:$PATH \
     PYTHONUNBUFFERED=1 \
@@ -62,7 +62,7 @@ RUN mkdir -p app && touch app/__init__.py \
  && rm -rf app
 
 # --- Pre-download models at BUILD time (embedding, reranker, spaCy) ----------
- USER user
+# USER user
 # COPY --chown=user:user docker/warm_models.py /tmp/warm_models.py
 # RUN python /tmp/warm_models.py && rm /tmp/warm_models.py
 # USER root
@@ -76,7 +76,8 @@ COPY start.sh ./start.sh
 # Re-install the package (editable) so `app` resolves from /app, not the
 # placeholder used for the dependency layer above.
 RUN pip install --no-deps --no-build-isolation -e . \
- && mkdir -p /app/data/processed && chmod +x /app/start.sh 
+ && mkdir -p /app/data/processed && chmod +x /app/start.sh \
+ && chown -R user:user /app
  # Assert no secret file entered the image. Build FAILS if one did.
  RUN if find / -xdev \( -name ".env" -o -name ".env.*" \) -not -name ".env.example" \
         -not -path "*/site-packages/*" 2>/dev/null | grep -q .; then \
