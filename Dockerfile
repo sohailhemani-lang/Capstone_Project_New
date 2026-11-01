@@ -16,21 +16,21 @@ ARG NEO4J_VERSION=5.26.30
 ARG DEBIAN_FRONTEND=noninteractive
 
 # --- System: headless Java 21 (Neo4j 5.26 supports 17 or 21; trixie ships 21) --
-RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-        openjdk-21-jre-headless ca-certificates curl procps \
- && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update \
+# && apt-get install -y --no-install-recommends \
+#        openjdk-21-jre-headless ca-certificates curl procps \
+# && rm -rf /var/lib/apt/lists/*
 
 # --- Neo4j Community (tarball: arch-independent, no systemd, no extra user) --
-ENV NEO4J_HOME=/opt/neo4j
-RUN set -eux; \
-    curl -fsSL "https://dist.neo4j.org/neo4j-community-${NEO4J_VERSION}-unix.tar.gz" \
-        -o /tmp/neo4j.tgz; \
-    mkdir -p /opt; tar -xzf /tmp/neo4j.tgz -C /opt; \
-    mv "/opt/neo4j-community-${NEO4J_VERSION}" "$NEO4J_HOME"; rm /tmp/neo4j.tgz; \
-    rm -rf "$NEO4J_HOME/data" "$NEO4J_HOME/logs" "$NEO4J_HOME/run" "$NEO4J_HOME/import"; \
-    mkdir -p /var/lib/neo4j/data /var/lib/neo4j/run /var/lib/neo4j/import /var/log/neo4j
-COPY docker/neo4j.conf $NEO4J_HOME/conf/neo4j.conf
+# ENV NEO4J_HOME=/opt/neo4j
+# RUN set -eux; \
+#    curl -fsSL "https://dist.neo4j.org/neo4j-community-${NEO4J_VERSION}-unix.tar.gz" \
+#        -o /tmp/neo4j.tgz; \
+#    mkdir -p /opt; tar -xzf /tmp/neo4j.tgz -C /opt; \
+#    mv "/opt/neo4j-community-${NEO4J_VERSION}" "$NEO4J_HOME"; rm /tmp/neo4j.tgz; \
+#    rm -rf "$NEO4J_HOME/data" "$NEO4J_HOME/logs" "$NEO4J_HOME/run" "$NEO4J_HOME/import"; \
+#    mkdir -p /var/lib/neo4j/data /var/lib/neo4j/run /var/lib/neo4j/import /var/log/neo4j
+# COPY docker/neo4j.conf $NEO4J_HOME/conf/neo4j.conf
 
 # --- Non-root user. HF Spaces run the container as uid 1000; create that user
 #     now so every path below is owned by it whether or not HF overrides USER.
@@ -82,9 +82,9 @@ RUN pip install --no-deps --no-build-isolation -e . \
         echo "FATAL: a .env file is inside the image" >&2; exit 1; fi
 
 # --- Runtime configuration (non-secret). Secrets arrive from the environment. --
-ENV NEO4J_URI=bolt://127.0.0.1:7687 \
-    NEO4J_USER=neo4j \
-    NEO4J_PASSWORD=embedded-no-auth \
+# ENV NEO4J_URI=bolt://127.0.0.1:7687 \
+#    NEO4J_USER=neo4j \
+#    NEO4J_PASSWORD=embedded-no-auth \
     TORCH_DEVICE=cpu \
     API_PORT=8000 \
     API_URL=http://127.0.0.1:8000 \
