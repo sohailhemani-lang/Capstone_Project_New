@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
@@ -14,7 +16,7 @@ conversation** -- the sidebar says so, and a stale `session_id` simply starts a
 fresh session rather than erroring.
 """
 
-from __future__ import annotations
+
 
 import os
 
