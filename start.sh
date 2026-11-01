@@ -59,7 +59,7 @@ trap cleanup EXIT INT TERM
 # --- [1] Neo4j ----------------------------------------------------------------
 S=$(date +%s.%N)
 mkdir -p /var/lib/neo4j/data /var/lib/neo4j/run /var/log/neo4j
-#"${NEO4J_HOME:-/opt/neo4j}/bin/neo4j" console > /var/log/neo4j/console.log 2>&1 &
+"${NEO4J_HOME:-/opt/neo4j}/bin/neo4j" console > /var/log/neo4j/console.log 2>&1 &
 #NEO4J_PID=$!
 #log "[1/4] neo4j starting (pid $NEO4J_PID), waiting up to ${NEO4J_WAIT}s for bolt"
 
