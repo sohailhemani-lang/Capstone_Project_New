@@ -36,7 +36,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 #     now so every path below is owned by it whether or not HF overrides USER.
  RUN useradd -m -u 1000 -s /bin/bash user \
  RUN mkdir -p /var/lib/neo4j /var/log/neo4j
- && chown -R user:user $NEO4J_HOME /var/lib/neo4j /var/log/neo4j
+ RUN chown -R user:user $NEO4J_HOME /var/lib/neo4j /var/log/neo4j
 ENV HOME=/home/user \
     PATH=/home/user/.local/bin:$NEO4J_HOME/bin:$PATH \
     PYTHONUNBUFFERED=1 \
