@@ -69,7 +69,7 @@ deadline=$(( $(date +%s) + NEO4J_WAIT ))
 until python - "$NEO4J_URI" <<'PY' 2>/dev/null
 import sys
 from neo4j import GraphDatabase
-with GraphDatabase.driver(sys.argv[1], auth=None) as d:
+with GraphDatabase.driver(sys.argv[1], auth=os.environ.get("NEO4J_USER"),os.environ.get("NEO4J_PASSWORD")) as d:
     d.verify_connectivity()
 PY
 do
