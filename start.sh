@@ -66,7 +66,7 @@ mkdir -p /var/lib/neo4j/data /var/lib/neo4j/run /var/log/neo4j
 BOLT_HOST=$(python -c "from urllib.parse import urlparse;u=urlparse('${NEO4J_URI}');print(u.hostname or '127.0.0.1')")
 BOLT_PORT=$(python -c "from urllib.parse import urlparse;u=urlparse('${NEO4J_URI}');print(u.port or 7687)")
 deadline=$(( $(date +%s) + NEO4J_WAIT ))
-until python - "$NEO4J_URI" <<'PY' 2>/dev/null
+until python - "$NEO4J_URI" <<'PY'
 import sys
 from neo4j import GraphDatabase
 with GraphDatabase.driver(sys.argv[1], auth=os.environ.get("NEO4J_USER"),os.environ.get("NEO4J_PASSWORD")) as d:
