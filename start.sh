@@ -102,7 +102,7 @@ log "[2/4] graph ready: ${NODES} nodes / ${RELS} relationships in $(since "$S")s
 
 # --- [3] FastAPI ---------------------------------------------------------------
 S=$(date +%s.%N)
-python -m uvicorn app.api.main:app --host 127.0.0.1 --port "$API_PORT" \
+python -m uvicorn app.api.main:app --host 0.0.0.0 --port "$API_PORT" \
     --log-level "${UVICORN_LOG_LEVEL:-info}" > >(sed -u 's/^/    | api: /') 2>&1 &
 API_PID=$!
 log "[3/4] api starting on 127.0.0.1:${API_PORT} (pid $API_PID); warmup loads models, waiting up to ${API_WAIT}s"
